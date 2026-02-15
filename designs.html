@@ -1,0 +1,126 @@
+﻿<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Larvik Paintball | Design variants</title>
+  <meta name="description" content="4 designkonsepter for Larvik Paintball (preview)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050605;
+      --card: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --lime: #b8ff1a;
+      --ember: #ff5c2a;
+      --sky: #5ad5ff;
+      --max: 1100px;
+      --sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 18% 12%, rgba(184,255,26,0.18), transparent 58%),
+        radial-gradient(900px 520px at 86% 22%, rgba(90,213,255,0.12), transparent 62%),
+        radial-gradient(1100px 700px at 55% 96%, rgba(255,92,42,0.12), transparent 68%),
+        linear-gradient(180deg, #070907, #030403);
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 26px 18px 60px; }
+    header { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; justify-content: space-between; padding: 22px 0 18px; border-bottom: 1px solid rgba(255,255,255,0.10); }
+    h1 { margin: 0; font-size: clamp(26px, 3.2vw, 40px); letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+    .grid { display: grid; gap: 14px; grid-template-columns: 1fr; margin-top: 18px; }
+    .card {
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .tag { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.74); border: 1px solid rgba(255,255,255,0.14); padding: 7px 10px; border-radius: 999px; background: rgba(0,0,0,0.18); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 11px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); }
+    .btn.primary { background: linear-gradient(180deg, rgba(184,255,26,0.92), rgba(46,230,115,0.74)); border-color: rgba(184,255,26,0.70); color: rgba(0,0,0,0.88); font-weight: 800; }
+    .muted { color: var(--muted); line-height: 1.65; margin: 0; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    @media (min-width: 860px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Larvik Paintball: designvarianter</h1>
+        <div class="sub">Booking-first, h&oslash;y kontrast, mye luft. Alle bruker kun IMG_* bilder.</div>
+      </div>
+      <div class="links">
+        <a class="btn" href="./">v1</a>
+        <a class="btn" href="./v2.html">v2</a>
+        <a class="btn primary" href="./c1-brutalist.html">c1</a>
+        <a class="btn primary" href="./c2-broadcast.html">c2</a>
+        <a class="btn primary" href="./c3-fieldmap.html">c3</a>
+        <a class="btn primary" href="./c4-premium.html">c4</a>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="row">
+          <div><b>c1: Brutalist Grid</b></div>
+          <div class="tag">svart/hvit + lime</div>
+        </div>
+        <p class="muted">Hard, boxy, mye linjer. Korte tekster, tydelig kalender og CTA.</p>
+        <div class="links">
+          <a class="btn primary" href="./c1-brutalist.html">&Aring;pne</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div><b>c2: Sports Broadcast</b></div>
+          <div class="tag">scoreboard + diagonaler</div>
+        </div>
+        <p class="muted">F&oslash;les som TV-grafikk: tidsblokker, signal-farger, action.</p>
+        <div class="links">
+          <a class="btn primary" href="./c2-broadcast.html">&Aring;pne</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div><b>c3: Tactical Field Map</b></div>
+          <div class="tag">kart / rutenett</div>
+        </div>
+        <p class="muted">Topografi og &quot;mission&quot;-spr&aring;k, med booking som &quot;deploy&quot;.</p>
+        <div class="links">
+          <a class="btn primary" href="./c3-fieldmap.html">&Aring;pne</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div><b>c4: Premium Event</b></div>
+          <div class="tag">minimal + luksus</div>
+        </div>
+        <p class="muted">Rolig premium, store bilder, f&aring; ord. Bygger trygghet og verdi.</p>
+        <div class="links">
+          <a class="btn primary" href="./c4-premium.html">&Aring;pne</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

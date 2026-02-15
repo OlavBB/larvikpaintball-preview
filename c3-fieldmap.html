@@ -1,0 +1,576 @@
+﻿<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Larvik Paintball | c3 Tactical Field Map</title>
+  <meta name="description" content="Tactical field map designkonsept: booking, kalender, praktisk info og kart." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg0: #070a07;
+      --bg1: #030503;
+      --card: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+
+      --lime: #b8ff1a;
+      --moss: #2ee673;
+      --ember: #ff5c2a;
+      --sky: #5ad5ff;
+
+      /* Only IMG_* images */
+      --imgA: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8932-scaled.jpg");
+      --imgB: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8933-scaled.jpg");
+      --imgC: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8941-scaled.jpg");
+      --imgD: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8944-scaled.jpg");
+      --imgE: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8969-scaled.jpg");
+
+      --max: 1180px;
+      --display: "Black Ops One", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      --sans: "Work Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 14% 14%, rgba(184,255,26,0.14), transparent 60%),
+        radial-gradient(900px 600px at 82% 20%, rgba(90,213,255,0.10), transparent 62%),
+        radial-gradient(900px 600px at 60% 92%, rgba(255,92,42,0.12), transparent 68%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      font-family: var(--sans);
+    }
+
+    /* Topographic + grid */
+    body:before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.06), rgba(255,255,255,0.06) 1px, transparent 1px, transparent 60px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 1px, transparent 1px, transparent 60px),
+        radial-gradient(circle at 30% 40%, rgba(255,255,255,0.06), transparent 55%),
+        radial-gradient(circle at 62% 58%, rgba(255,255,255,0.06), transparent 60%),
+        radial-gradient(circle at 78% 32%, rgba(255,255,255,0.05), transparent 58%);
+      mix-blend-mode: overlay;
+      opacity: 0.35;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 18px; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(7,10,7,0.82);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    .title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .insignia {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      background: var(--moss);
+      box-shadow: 0 0 0 4px rgba(46,230,115,0.14);
+    }
+
+    .title b { font-family: var(--display); letter-spacing: 0.06em; text-transform: uppercase; font-size: 18px; }
+    .title span { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.74); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.86);
+      user-select: none;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, rgba(184,255,26,0.92), rgba(46,230,115,0.70));
+      border-color: rgba(184,255,26,0.60);
+      color: rgba(0,0,0,0.88);
+      font-weight: 800;
+    }
+
+    main { padding-bottom: 86px; }
+    section { padding: 84px 0; }
+
+    .hero {
+      padding: 96px 0 74px;
+    }
+
+    .heroGrid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .card {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      box-shadow: 0 28px 90px rgba(0,0,0,0.55);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(184,255,26,0.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(90,213,255,0.08), transparent 62%),
+        radial-gradient(900px 500px at 70% 92%, rgba(255,92,42,0.10), transparent 68%);
+      pointer-events: none;
+    }
+
+    .pad { padding: 24px; position: relative; }
+
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(36px, 4.6vw, 62px);
+      line-height: 1.02;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .lead { margin: 12px 0 0; color: rgba(255,255,255,0.76); line-height: 1.85; max-width: 72ch; }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.80);
+    }
+
+    .chip.hot { border-color: rgba(184,255,26,0.38); }
+    .chip.warn { border-color: rgba(255,92,42,0.40); background: rgba(255,92,42,0.10); }
+
+    .mission {
+      margin-top: 18px;
+      border: 1px dashed rgba(255,255,255,0.20);
+      background: rgba(0,0,0,0.16);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.80);
+    }
+
+    .gridShots {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 18px;
+    }
+
+    .shot {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background-size: cover;
+      background-position: center;
+      min-height: 170px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shot:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.66));
+    }
+
+    .shot.a { background-image: var(--imgA); }
+    .shot.b { background-image: var(--imgC); }
+    .shot.c { background-image: var(--imgD); }
+    .shot.d { background-image: var(--imgE); }
+
+    .sectionHead {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    h2 { margin: 0; font-family: var(--display); letter-spacing: 0.06em; text-transform: uppercase; }
+    .fine { color: rgba(255,255,255,0.68); font-family: var(--mono); font-size: 12px; }
+
+    .calendar {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+
+    .calTop {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(46,230,115,0.10), rgba(184,255,26,0.06), rgba(90,213,255,0.06));
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .legend .chip { background: rgba(0,0,0,0.12); }
+
+    .dot { width: 10px; height: 10px; border-radius: 999px; }
+    .dot.free { background: var(--lime); box-shadow: 0 0 0 3px rgba(184,255,26,0.14); }
+    .dot.booked { background: var(--ember); box-shadow: 0 0 0 3px rgba(255,92,42,0.12); }
+    .dot.buffer { background: var(--sky); box-shadow: 0 0 0 3px rgba(90,213,255,0.10); }
+
+    .legendItem { display: inline-flex; align-items: center; gap: 8px; }
+
+    .calGrid { display: grid; grid-template-columns: 78px 1fr 1fr; }
+    .calHead {
+      padding: 12px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.74);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .col { display: grid; grid-auto-rows: 44px; }
+    .col.time { border-right: 1px solid rgba(255,255,255,0.10); }
+
+    .slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .slot.time { justify-content: flex-start; color: rgba(255,255,255,0.68); }
+    .slot.free { background: rgba(184,255,26,0.10); }
+    .slot.booked { background: rgba(255,92,42,0.12); }
+    .slot.buffer { background: rgba(90,213,255,0.10); }
+
+    .cards { display: grid; gap: 14px; grid-template-columns: 1fr; margin-top: 14px; }
+    .info {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.16);
+      padding: 22px;
+    }
+
+    .info p { margin: 10px 0 0; color: rgba(255,255,255,0.74); line-height: 1.85; }
+
+    .mapFrame {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow: hidden;
+      height: 360px;
+      background: rgba(0,0,0,0.14);
+      margin-top: 14px;
+    }
+
+    .mapFrame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    .sticky {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(7,10,7,0.86);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .sticky .inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .sticky .left { display: grid; gap: 2px; }
+    .sticky .left b { font-family: var(--mono); font-size: 12px; }
+    .sticky .left span { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.68); }
+
+    @media (min-width: 980px) {
+      .heroGrid { grid-template-columns: 1.05fr 0.95fr; }
+      .cards { grid-template-columns: 1fr 1fr 1fr; }
+      .sticky { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <div class="title">
+          <span class="insignia"></span>
+          <b>LARVIK PAINTBALL</b>
+          <span>c3 &middot; Tactical Field Map</span>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" href="./designs.html">Alle design</a>
+          <a class="btn" href="#foresporsel">Ukedag</a>
+          <a class="btn primary" href="#booking">Deploy booking</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="wrap">
+        <div class="heroGrid">
+          <div class="card">
+            <div class="pad">
+              <div class="fine">STATUS</div>
+              <h1>OPERASJON: HELG</h1>
+              <p class="lead">Booking-first. Se ledig/booket. F&aring; varsler p&aring; SMS + e-post. Kalenderen oppdateres automatisk.</p>
+
+              <div class="stats">
+                <span class="chip hot">590 kr / pers</span>
+                <span class="chip">inkl. 200 baller</span>
+                <span class="chip">+500: 200 kr</span>
+                <span class="chip">1&ndash;2t</span>
+                <span class="chip">30 min buffer</span>
+                <span class="chip">10&ndash;25 spillere</span>
+                <span class="chip warn">Ukedag: foresp&oslash;rsel</span>
+              </div>
+
+              <div class="mission" aria-label="Oppdrag">
+                <b>MISSION BRIEF:</b><br />
+                1) Velg dato og starttid (helg 10&ndash;18)<br />
+                2) Systemet legger inn 30 min buffer automatisk<br />
+                3) Admin + kunde f&aring;r SMS + e-post ved booking / foresp&oslash;rsel<br />
+                4) Ukedag godkjennes/avsl&aring;s via lenke (to-veis SMS valgfritt)
+              </div>
+
+              <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top: 18px;">
+                <a class="btn primary" href="#booking">&rarr; Book helg n&aring;</a>
+                <a class="btn" href="#praktisk">Praktisk</a>
+                <a class="btn" href="#finn">Finn oss</a>
+              </div>
+
+              <div class="gridShots" aria-label="Bilder">
+                <div class="shot a"></div>
+                <div class="shot b"></div>
+                <div class="shot c"></div>
+                <div class="shot d"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="pad">
+              <div class="sectionHead">
+                <h2>CHECKLIST</h2>
+                <div class="fine">Oppm&oslash;te 15 min f&oslash;r</div>
+              </div>
+
+              <div class="cards" style="margin-top:0;">
+                <div class="info">
+                  <div class="fine">HELGEBOOKING</div>
+                  <p>Auto-bekreftet i Amelia. L&oslash;r/s&oslash;n 10&ndash;18, fri starttid, 30 min buffer.</p>
+                </div>
+                <div class="info" id="foresporsel">
+                  <div class="fine">UKEDAG</div>
+                  <p>Foresp&oslash;rsel: dere f&aring;r SMS + e-post og godkjenner/avsl&aring;r via lenke.</p>
+                </div>
+                <div class="info">
+                  <div class="fine">KONTAKT</div>
+                  <p>92465866 &middot; contact@larvikpaintball.no</p>
+                </div>
+              </div>
+
+              <div style="height: 14px;"></div>
+              <div class="info">
+                <div class="fine">SIKKERHET</div>
+                <p>Maske alltid i spillomr&aring;det. Kl&aelig;r som t&aring;ler litt skitt + gode sko. Hansker anbefales.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="booking">
+      <div class="wrap">
+        <div class="sectionHead">
+          <h2>KALENDER</h2>
+          <div class="fine">Prototype (erstattes av Amelia i WordPress)</div>
+        </div>
+
+        <div class="calendar" aria-label="Kalender prototype">
+          <div class="calTop">
+            <div>
+              <b style="font-family: var(--display); letter-spacing: 0.06em; text-transform: uppercase;">Deploy window: helg 10&ndash;18</b>
+              <div class="fine" style="margin-top: 6px;">Ledig / booket / buffer</div>
+            </div>
+            <div class="legend">
+              <span class="chip"><span class="legendItem"><span class="dot free"></span>Ledig</span></span>
+              <span class="chip"><span class="legendItem"><span class="dot booked"></span>Booket</span></span>
+              <span class="chip"><span class="legendItem"><span class="dot buffer"></span>Buffer</span></span>
+            </div>
+          </div>
+
+          <div class="calGrid">
+            <div class="calHead" style="border-right: 1px solid rgba(255,255,255,0.10);">Tid</div>
+            <div class="calHead">L&oslash;rdag</div>
+            <div class="calHead">S&oslash;ndag</div>
+
+            <div class="col time">
+              <div class="slot time">10:00</div>
+              <div class="slot time">11:00</div>
+              <div class="slot time">12:00</div>
+              <div class="slot time">13:00</div>
+              <div class="slot time">14:00</div>
+              <div class="slot time">15:00</div>
+              <div class="slot time">16:00</div>
+              <div class="slot time">17:00</div>
+            </div>
+
+            <div class="col">
+              <div class="slot free">Ledig</div>
+              <div class="slot booked">Booket (2t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot booked">Booket (1t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+            </div>
+
+            <div class="col">
+              <div class="slot booked">Booket (1t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot booked">Booket (2t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot free">Ledig</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cards">
+          <div class="info">
+            <div class="fine">AMELIA PLACEHOLDER</div>
+            <p>Her kommer Amelia booking-widget (dato, starttid, 1t/2t, antall). Kalender oppdateres automatisk.</p>
+          </div>
+          <div class="info">
+            <div class="fine">VARSLER</div>
+            <p>SMS + e-post til admin og kunde. Ukedag godkjenning via lenke. (To-veis SMS valgfritt.)</p>
+          </div>
+          <div class="info">
+            <div class="fine">KONTAKT</div>
+            <p>92465866 &middot; contact@larvikpaintball.no</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="praktisk">
+      <div class="wrap">
+        <div class="sectionHead">
+          <h2>PRAKTISK</h2>
+          <div class="fine">Rask briefing p&aring; stedet</div>
+        </div>
+        <div class="cards" style="margin-top:0;">
+          <div class="info">
+            <div class="fine">OPPM&OSlash;TE</div>
+            <p>Kom 15 min f&oslash;r start. Vi tar briefing og f&aring;r dere i gang raskt.</p>
+          </div>
+          <div class="info">
+            <div class="fine">UTSTYR</div>
+            <p>Kl&aelig;r som t&aring;ler litt skitt + gode sko. Hansker anbefales.</p>
+          </div>
+          <div class="info">
+            <div class="fine">SIKKERHET</div>
+            <p>Maske alltid i spillomr&aring;det. H&oslash;r p&aring; instrukt&oslash;r og f&oslash;lg reglene.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="finn">
+      <div class="wrap">
+        <div class="sectionHead">
+          <h2>FINN OSS</h2>
+          <div class="fine">Google Maps</div>
+        </div>
+        <div class="mapFrame" aria-label="Google Maps">
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Larvik%20Paintball&output=embed" title="Google Maps: Larvik Paintball"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sticky" role="navigation" aria-label="Rask booking">
+    <div class="inner">
+      <div class="left">
+        <b>590 kr / pers</b>
+        <span>Helg 10&ndash;18 &middot; auto-bekreftet</span>
+      </div>
+      <a class="btn primary" href="#booking">Book n&aring;</a>
+    </div>
+  </div>
+</body>
+</html>

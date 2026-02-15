@@ -1,0 +1,563 @@
+﻿<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Larvik Paintball | c2 Sports Broadcast</title>
+  <meta name="description" content="Sports broadcast designkonsept: booking, kalender, praktisk info og kart." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg0: #07070a;
+      --bg1: #040406;
+      --card: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+
+      --lime: #b8ff1a;
+      --ember: #ff5c2a;
+      --sky: #5ad5ff;
+      --purple: #a68cff;
+
+      /* Only IMG_* images */
+      --imgA: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8932-scaled.jpg");
+      --imgB: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8933-scaled.jpg");
+      --imgC: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8941-scaled.jpg");
+      --imgD: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8944-scaled.jpg");
+      --imgE: url("https://larvikpaintball.no/wp-content/uploads/2025/09/IMG_8969-scaled.jpg");
+      --logo: url("https://larvikpaintball.no/wp-content/uploads/2025/09/LarvikPaintballTekstBW-scaled.png");
+
+      --max: 1180px;
+      --display: "Barlow Condensed", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      --tech: "Oxanium", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 14% 14%, rgba(184,255,26,0.16), transparent 60%),
+        radial-gradient(900px 600px at 82% 20%, rgba(90,213,255,0.12), transparent 62%),
+        radial-gradient(900px 600px at 70% 92%, rgba(255,92,42,0.14), transparent 68%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      font-family: var(--tech);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 18px; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(7,7,10,0.82);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .scorebar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    .left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.22);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.80);
+    }
+
+    .team {
+      font-family: var(--display);
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: var(--display);
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, rgba(184,255,26,0.94), rgba(90,213,255,0.74));
+      border-color: rgba(184,255,26,0.60);
+      color: rgba(0,0,0,0.88);
+    }
+
+    main { padding-bottom: 86px; }
+    section { padding: 78px 0; }
+
+    .hero {
+      padding: 92px 0 72px;
+    }
+
+    .heroGrid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .heroCard {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      box-shadow: 0 28px 90px rgba(0,0,0,0.55);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .heroCard:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(184,255,26,0.12), transparent 40%),
+        linear-gradient(225deg, rgba(255,92,42,0.14), transparent 40%);
+      pointer-events: none;
+    }
+
+    .heroInner { padding: 24px; position: relative; }
+
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(44px, 6.0vw, 82px);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .sub {
+      margin: 10px 0 0;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.8;
+      max-width: 70ch;
+      font-family: var(--tech);
+      font-size: 15px;
+    }
+
+    .kpi {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 18px;
+    }
+
+    .k {
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      padding: 14px;
+      border-radius: 18px;
+    }
+
+    .k b { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.78); }
+    .k div { font-family: var(--display); font-size: 22px; letter-spacing: 0.04em; margin-top: 6px; text-transform: uppercase; }
+
+    .ctaRow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+    .reel {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 18px;
+    }
+
+    .shot {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background-size: cover;
+      background-position: center;
+      min-height: 170px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shot:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.64));
+    }
+
+    .shot.a { background-image: var(--imgA); }
+    .shot.b { background-image: var(--imgC); }
+    .shot.c { background-image: var(--imgD); }
+    .shot.d { background-image: var(--imgE); }
+
+    .sectionHead {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    h2 { margin: 0; font-family: var(--display); text-transform: uppercase; letter-spacing: 0.08em; }
+    .fine { color: rgba(255,255,255,0.68); font-family: var(--mono); font-size: 12px; }
+
+    .cards { display: grid; gap: 14px; grid-template-columns: 1fr; }
+    .card {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      padding: 22px;
+    }
+
+    .card p { margin: 10px 0 0; color: rgba(255,255,255,0.74); line-height: 1.8; }
+
+    .calendar {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+
+    .calTop {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(184,255,26,0.10), rgba(90,213,255,0.06), rgba(255,92,42,0.08));
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.16);
+      color: rgba(255,255,255,0.78);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 999px; }
+    .dot.free { background: var(--lime); }
+    .dot.booked { background: var(--ember); }
+    .dot.buffer { background: var(--sky); }
+
+    .calGrid {
+      display: grid;
+      grid-template-columns: 78px 1fr 1fr;
+    }
+
+    .calHead {
+      padding: 12px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.74);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .col { display: grid; grid-auto-rows: 44px; }
+    .col.time { border-right: 1px solid rgba(255,255,255,0.10); }
+
+    .slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .slot.time { justify-content: flex-start; color: rgba(255,255,255,0.68); }
+    .slot.free { background: rgba(184,255,26,0.10); }
+    .slot.booked { background: rgba(255,92,42,0.12); }
+    .slot.buffer { background: rgba(90,213,255,0.10); }
+
+    .mapFrame {
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow: hidden;
+      height: 360px;
+      background: rgba(0,0,0,0.14);
+    }
+    .mapFrame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    .sticky {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(7,7,10,0.86);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .sticky .inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .sticky .left { display: grid; gap: 2px; }
+    .sticky .left b { font-family: var(--mono); font-size: 12px; }
+    .sticky .left span { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.68); }
+
+    @media (min-width: 980px) {
+      .heroGrid { grid-template-columns: 1.05fr 0.95fr; }
+      .cards { grid-template-columns: 1fr 1fr 1fr; }
+      .sticky { display: none; }
+    }
+
+    @media (min-width: 860px) {
+      .kpi { grid-template-columns: 1fr 1fr 1fr 1fr; }
+      .reel { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="scorebar">
+        <div class="left">
+          <div class="team">LARVIK PAINTBALL</div>
+          <div class="badge">Helg 10&ndash;18</div>
+          <div class="badge">10&ndash;25 spillere</div>
+          <div class="badge">Betaling p&aring; stedet</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <a class="btn" href="./designs.html">Alle design</a>
+          <a class="btn" href="#foresporsel">Ukedag</a>
+          <a class="btn primary" href="#booking">Book helg</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="wrap">
+        <div class="heroGrid">
+          <div class="heroCard">
+            <div class="heroInner">
+              <div class="fine">c2: Sports Broadcast</div>
+              <h1>BOOK. PLAY. REPEAT.</h1>
+              <p class="sub">Booking-first med live-f&oslash;lelse: du ser ledig/booket, f&aring;r varsler p&aring; SMS + e-post, og kalenderen oppdateres automatisk.</p>
+
+              <div class="kpi">
+                <div class="k"><b>PRIS</b><div>590 / pers</div></div>
+                <div class="k"><b>INKLUDERT</b><div>200 baller</div></div>
+                <div class="k"><b>EKSTRA</b><div>+500 = 200</div></div>
+                <div class="k"><b>OPPLEGG</b><div>1&ndash;2t</div></div>
+              </div>
+
+              <div class="ctaRow">
+                <a class="btn primary" href="#booking">&rarr; BOOK HELG</a>
+                <a class="btn" href="#pakker">PRIS</a>
+                <a class="btn" href="#finn">FINN OSS</a>
+              </div>
+
+              <div class="reel" aria-label="Bilder">
+                <div class="shot a"></div>
+                <div class="shot b"></div>
+                <div class="shot c"></div>
+                <div class="shot d"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="heroCard">
+            <div class="heroInner">
+              <div class="sectionHead">
+                <h2>RASK INFO</h2>
+                <div class="fine">Oppm&oslash;te 15 min f&oslash;r</div>
+              </div>
+              <div class="cards">
+                <div class="card">
+                  <div class="fine">HELGEBOOKING</div>
+                  <p>Auto-bekreftet i Amelia. Fri starttid l&oslash;r/s&oslash;n 10&ndash;18. 30 min buffer.</p>
+                </div>
+                <div class="card" id="foresporsel">
+                  <div class="fine">UKEDAG</div>
+                  <p>Foresp&oslash;rsel: dere f&aring;r SMS + e-post og kan godkjenne/avsl&aring; via lenke. (To-veis SMS er valgfritt.)</p>
+                </div>
+                <div class="card">
+                  <div class="fine">KONTAKT</div>
+                  <p>92465866 &middot; contact@larvikpaintball.no</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="booking">
+      <div class="wrap">
+        <div class="sectionHead">
+          <h2>BOOKING / KALENDER</h2>
+          <div class="fine">Prototype (erstattes av Amelia i WordPress)</div>
+        </div>
+
+        <div class="calendar" aria-label="Kalender prototype">
+          <div class="calTop">
+            <div>
+              <b style="font-family: var(--display); letter-spacing: 0.08em; text-transform: uppercase;">Helg 10&ndash;18</b>
+              <div class="fine" style="margin-top: 6px;">Ledig / booket / buffer</div>
+            </div>
+            <div class="legend">
+              <div class="chip"><span class="dot free"></span>Ledig</div>
+              <div class="chip"><span class="dot booked"></span>Booket</div>
+              <div class="chip"><span class="dot buffer"></span>Buffer</div>
+            </div>
+          </div>
+
+          <div class="calGrid">
+            <div class="calHead" style="border-right: 1px solid rgba(255,255,255,0.10);">Tid</div>
+            <div class="calHead">L&oslash;rdag</div>
+            <div class="calHead">S&oslash;ndag</div>
+
+            <div class="col time">
+              <div class="slot time">10:00</div>
+              <div class="slot time">11:00</div>
+              <div class="slot time">12:00</div>
+              <div class="slot time">13:00</div>
+              <div class="slot time">14:00</div>
+              <div class="slot time">15:00</div>
+              <div class="slot time">16:00</div>
+              <div class="slot time">17:00</div>
+            </div>
+
+            <div class="col">
+              <div class="slot free">Ledig</div>
+              <div class="slot booked">Booket (2t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot booked">Booket (1t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+            </div>
+
+            <div class="col">
+              <div class="slot booked">Booket (1t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot booked">Booket (2t)</div>
+              <div class="slot buffer">Buffer</div>
+              <div class="slot free">Ledig</div>
+              <div class="slot free">Ledig</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cards" style="margin-top: 14px;">
+          <div class="card">
+            <div class="fine">AMELIA PLACEHOLDER</div>
+            <p>Her kommer Amelia sin booking-widget (dato, starttid, 1t/2t, antall). Kalender oppdateres automatisk.</p>
+          </div>
+          <div class="card">
+            <div class="fine">REGLER</div>
+            <p>Oppm&oslash;te 15 min f&oslash;r. Maske alltid i spillomr&aring;det. Kl&aelig;r som t&aring;ler litt skitt.</p>
+          </div>
+          <div class="card">
+            <div class="fine">VARSLER</div>
+            <p>SMS + e-post til admin og kunde. Godkjenning av ukedag via lenke. (To-veis SMS valgfritt.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pakker">
+      <div class="wrap">
+        <div class="sectionHead">
+          <h2>PRIS</h2>
+          <div class="fine">Enkelt og tydelig</div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <div class="fine">STANDARD</div>
+            <p><b>590 kr per person</b> inkl. 200 baller. Min 10 / maks 25 spillere. Betaling p&aring; stedet.</p>
+          </div>
+          <div class="card">
+            <div class="fine">EKSTRA</div>
+            <p><b>+500 baller = 200 kr</b>. Kan avtales p&aring; forh&aring;nd eller p&aring; stedet.</p>
+          </div>
+          <div class="card">
+            <div class="fine">KONTAKT</div>
+            <p>92465866 &middot; contact@larvikpaintball.no</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="finn">
+      <div class="wrap">
+        <div class="sectionHead">
+          <h2>FINN OSS</h2>
+          <div class="fine">Google Maps</div>
+        </div>
+        <div class="mapFrame" aria-label="Google Maps">
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Larvik%20Paintball&output=embed" title="Google Maps: Larvik Paintball"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sticky" role="navigation" aria-label="Rask booking">
+    <div class="inner">
+      <div class="left">
+        <b>590 kr / pers</b>
+        <span>Helg 10&ndash;18 &middot; auto-bekreftet</span>
+      </div>
+      <a class="btn primary" href="#booking">BOOK N&Aring;</a>
+    </div>
+  </div>
+</body>
+</html>
