@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Larvik Paintball | Baneutleie, utstyr og booking</title>
+    <meta
+      name="description"
+      content="Book paintballbane i Larvik. 590 kr per person inkl. 200 baller. Helg 10-18. Utstyr, sikkerhetsbrief og opplegg for grupper."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Sora:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Visual prototype (not a full booking system). -->
+    <style>
+      :root {
+        --bg0: #070907;
+        --bg1: #050705;
+        --card: rgba(255, 255, 255, 0.06);
+        --card2: rgba(255, 255, 255, 0.09);
+        --stroke: rgba(255, 255, 255, 0.12);
+        --stroke2: rgba(255, 255, 255, 0.18);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.72);
+        --faint: rgba(255, 255, 255, 0.55);
+
+        --sand: #e8d6b2;
+        --lime: #b8ff1a;
+        --moss: #2ee673;
+        --ember: #ff5c2a;
+        --sky: #5ad5ff;
+        --ink: rgba(0, 0, 0, 0.84);
+
+        --shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+        --shadow2: 0 12px 40px rgba(0, 0, 0, 0.35);
+        --radius: 18px;
+        --radius2: 28px;
+        --max: 1120px;
+
+        --sans: "Sora", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+        --display: "Space Grotesk", "Sora", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      }
+
+      /* If Google Fonts are allowed in prod, swap these:
+         --display: "Space Grotesk", ...;
+         --sans: "Sora", ...;
+         --mono: "IBM Plex Mono", ...;
+      */
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(900px 620px at 18% 12%, rgba(184,255,26,0.22), transparent 58%),
+          radial-gradient(900px 620px at 86% 22%, rgba(90,213,255,0.14), transparent 62%),
+          radial-gradient(1100px 700px at 55% 96%, rgba(255,92,42,0.14), transparent 68%),
+          radial-gradient(900px 520px at 70% 70%, rgba(46,230,115,0.10), transparent 65%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+        font-family: var(--sans);
+        letter-spacing: 0.2px;
+      }
+
+      a { color: inherit; }
+      .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+      .grid { display: grid; gap: 16px; }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        background: rgba(255,255,255,0.06);
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        transition: transform 140ms ease, background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+        user-select: none;
+      }
+      .btn:hover { transform: translateY(-1px); }
+      .btn:not(.primary):hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.28); }
+      .btn.primary {
+        background: linear-gradient(180deg, rgba(184,255,26,0.95), rgba(46,230,115,0.78));
+        border-color: rgba(184,255,26,0.70);
+        color: rgba(0,0,0,0.88);
+        text-shadow: none;
+        box-shadow:
+          0 18px 55px rgba(184,255,26,0.22),
+          0 10px 30px rgba(46,230,115,0.16);
+      }
+      .btn.primary:hover { filter: brightness(1.03); }
+      .btn.danger {
+        background: linear-gradient(180deg, rgba(255,92,42,0.20), rgba(255,92,42,0.08));
+        border-color: rgba(255,92,42,0.44);
+      }
+      .pill {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        padding: 8px 12px;
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        background: rgba(0,0,0,0.22);
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke);
+        background: rgba(255,255,255,0.04);
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .card {
+        border-radius: var(--radius);
+        border: 1px solid var(--stroke);
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        box-shadow: var(--shadow2);
+      }
+      .card.pad { padding: 18px; }
+      .title {
+        font-family: var(--display);
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .h1 { font-size: clamp(34px, 4.1vw, 58px); line-height: 1.02; }
+      .h2 { font-size: clamp(22px, 2.2vw, 30px); line-height: 1.14; }
+      .h3 { font-size: 18px; line-height: 1.2; }
+      .muted { color: var(--muted); }
+      .faint { color: var(--faint); }
+      .kpi {
+        display: grid;
+        gap: 4px;
+        padding: 14px 14px;
+        border-radius: 16px;
+        border: 1px solid var(--stroke);
+        background: rgba(0,0,0,0.20);
+      }
+      .kpi strong { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.86); }
+      .kpi span { font-size: 12px; color: var(--muted); }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(12px);
+        background: rgba(7, 9, 7, 0.72);
+        border-bottom: 1px solid rgba(255,255,255,0.10);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 14px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.14);
+        background:
+          radial-gradient(12px 12px at 30% 30%, rgba(184,255,26,0.72), transparent 55%),
+          radial-gradient(14px 14px at 70% 65%, rgba(255,92,42,0.50), transparent 60%),
+          linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+        box-shadow: 0 14px 45px rgba(0,0,0,0.55);
+      }
+      .brand .name { font-weight: 900; letter-spacing: 0.3px; }
+      .brand .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+      .navlinks {
+        display: none;
+        gap: 10px;
+        align-items: center;
+      }
+      .navlinks a {
+        text-decoration: none;
+        color: var(--muted);
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+      }
+      .navlinks a:hover {
+        color: rgba(255,255,255,0.92);
+        border-color: rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .hero {
+        padding: 44px 0 14px;
+      }
+      .heroGrid {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      .heroTop {
+        display: grid;
+        gap: 16px;
+      }
+      .heroTop p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 62ch; }
+      .ctaRow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+      .priceLine {
+        margin-top: 12px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+      }
+      .priceLine .big {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .priceLine .big b {
+        font-family: var(--mono);
+        font-size: 16px;
+        color: rgba(255,255,255,0.92);
+      }
+      .priceLine .big i { font-style: normal; color: rgba(255,255,255,0.78); }
+
+      .bookingCard {
+        padding: 16px;
+        border-radius: var(--radius2);
+        border: 1px solid rgba(184,255,26,0.26);
+        background:
+          radial-gradient(800px 420px at 25% 20%, rgba(184,255,26,0.16), transparent 58%),
+          radial-gradient(700px 420px at 80% 30%, rgba(90,213,255,0.12), transparent 60%),
+          linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+        box-shadow: var(--shadow);
+      }
+      .bookingHeader {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .bookingHeader .mini { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+      .formGrid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      input, select, textarea {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(0,0,0,0.28);
+        color: rgba(255,255,255,0.92);
+        padding: 12px 12px;
+        font: inherit;
+        outline: none;
+      }
+      input:focus, select:focus, textarea:focus { border-color: rgba(184,255,26,0.55); box-shadow: 0 0 0 3px rgba(184,255,26,0.14); }
+      textarea { min-height: 92px; resize: vertical; }
+      .notice {
+        display: grid;
+        gap: 6px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(0,0,0,0.32);
+        padding: 12px 12px;
+        border-radius: 14px;
+        color: rgba(255,255,255,0.84);
+        font-size: 13px;
+      }
+      .notice b { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.74); }
+      .warn {
+        border-color: rgba(255,92,42,0.30);
+        background: rgba(255,92,42,0.10);
+      }
+
+      section { padding: 18px 0; }
+      .sectionHead {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 4px 0 12px;
+      }
+      .sectionHead p { margin: 6px 0 0; max-width: 68ch; color: var(--muted); }
+
+      .serviceGrid { grid-template-columns: 1fr; }
+      .serviceCard { padding: 16px; position: relative; overflow: hidden; }
+      .serviceCard:before {
+        content: "";
+        position: absolute;
+        inset: -80px -120px auto auto;
+        width: 240px;
+        height: 240px;
+        transform: rotate(18deg);
+        background: radial-gradient(circle at 30% 30%, rgba(184,255,26,0.26), transparent 62%);
+        filter: blur(2px);
+        opacity: 0.9;
+      }
+      .serviceCard .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .serviceCard p { margin: 10px 0 0; color: var(--muted); line-height: 1.5; }
+
+      .steps { grid-template-columns: 1fr; }
+      .step { padding: 16px; }
+      .step .n {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: rgba(255,255,255,0.78);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .step .dot {
+        width: 10px; height: 10px; border-radius: 999px;
+        background: rgba(183,255,106,0.75);
+        box-shadow: 0 0 0 6px rgba(183,255,106,0.14);
+      }
+      .step h3 { margin: 10px 0 8px; }
+      .step p { margin: 0; color: var(--muted); line-height: 1.5; }
+
+      .prices { grid-template-columns: 1fr; }
+      .priceCard { padding: 18px; }
+      .priceCard .badge { display: inline-flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+      .priceCard .money { font-family: var(--mono); font-weight: 900; font-size: 18px; }
+      .priceCard ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
+      .priceCard li { margin: 6px 0; }
+      .priceCard .action { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+      .faq { grid-template-columns: 1fr; }
+      details {
+        border-radius: 16px;
+        border: 1px solid var(--stroke);
+        background: rgba(255,255,255,0.04);
+        padding: 14px 14px;
+      }
+      summary { cursor: pointer; font-weight: 800; }
+      details p { margin: 10px 0 0; color: var(--muted); line-height: 1.55; }
+
+      footer {
+        margin-top: 18px;
+        padding: 22px 0 34px;
+        border-top: 1px solid rgba(255,255,255,0.10);
+        color: var(--muted);
+      }
+      .footGrid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .fine { font-size: 12px; color: rgba(255,255,255,0.60); }
+
+      @media (min-width: 900px) {
+        .navlinks { display: flex; }
+        .heroGrid { grid-template-columns: 1.08fr 0.92fr; gap: 18px; }
+        .formGrid { grid-template-columns: 1fr 1fr; }
+        .priceLine { grid-template-columns: 1fr 1fr; align-items: center; }
+        .serviceGrid { grid-template-columns: 1fr 1fr 1fr; }
+        .steps { grid-template-columns: 1fr 1fr 1fr; }
+        .prices { grid-template-columns: 1fr 1fr; }
+        .faq { grid-template-columns: 1fr 1fr; }
+        .footGrid { grid-template-columns: 1fr 1fr 1fr; }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .fadeUp { animation: fadeUp 520ms ease both; }
+        .delay1 { animation-delay: 90ms; }
+        .delay2 { animation-delay: 170ms; }
+        .delay3 { animation-delay: 240ms; }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      }
+
+      /* Mobile "book now" bar to push conversions */
+      .stickyBook {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 60;
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+        background: rgba(7, 9, 7, 0.82);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+      }
+      .stickyBook .inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .stickyBook .left {
+        display: grid;
+        gap: 2px;
+      }
+      .stickyBook .left b {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: rgba(255,255,255,0.92);
+      }
+      .stickyBook .left span {
+        font-size: 12px;
+        color: rgba(255,255,255,0.68);
+      }
+      @media (min-width: 900px) {
+        .stickyBook { display: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="wrap">
+        <div class="nav">
+          <a class="brand" href="#top" aria-label="Larvik Paintball">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+              <div class="name">LARVIK PAINTBALL</div>
+              <div class="sub">Baneutleie og utstyr | Helg 10-18</div>
+            </div>
+          </a>
+
+          <nav class="navlinks" aria-label="Meny">
+            <a href="#booking">Booking</a>
+            <a href="#pakker">Pakker</a>
+            <a href="#praktisk">Praktisk</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+
+          <div class="ctaRow">
+            <a class="btn" href="#forespoersel">Ukedag (foresp&oslash;rsel)</a>
+            <a class="btn primary" href="#booking">Book helg</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="wrap">
+          <div class="grid heroGrid">
+            <div class="heroTop fadeUp">
+              <div class="pill">
+                <span>1 bane</span>
+                <span>&bull;</span>
+                <span>fri starttid</span>
+                <span>&bull;</span>
+                <span>30 min buffer</span>
+              </div>
+
+              <h1 class="title h1">
+                Baneutleie paintball
+                <span style="color: var(--lime)">uten styr</span>.
+              </h1>
+              <p>
+                Book helg 10-18. Vi ordner utstyr, sikkerhetsbrief og opplegg. Du tar med folk.
+                Perfekt for bursdag, utdrikningslag eller vennegjeng.
+              </p>
+
+              <div class="priceLine">
+                <div class="big">
+                  <b>590 kr</b>
+                  <i>per person</i>
+                  <span class="tag">inkl. 200 baller</span>
+                </div>
+                <div class="big">
+                  <span class="tag" style="border-color: rgba(255,106,61,0.36); background: rgba(255,106,61,0.10);">
+                    +500 baller: 200 kr
+                  </span>
+                  <span class="tag">min 10</span>
+                  <span class="tag">maks 25</span>
+                </div>
+              </div>
+
+              <div class="ctaRow">
+                <a class="btn primary" href="#booking">Book helg (10&ndash;18)</a>
+                <a class="btn" href="#pakker">Se pakker</a>
+                <a class="btn danger" href="#praktisk">Sikkerhet & regler</a>
+              </div>
+
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+                <div class="kpi">
+                  <strong>Oppmøte</strong>
+                  <span>15 min før start</span>
+                </div>
+                <div class="kpi">
+                  <strong>Betaling</strong>
+                  <span>på stedet</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bookingCard fadeUp delay1" id="booking">
+              <div class="bookingHeader">
+                <h2 class="title h2">Book helg</h2>
+                <div class="mini">L&oslash;r&ndash;s&oslash;n 10:00&ndash;18:00</div>
+              </div>
+
+              <div class="notice warn" role="note" aria-label="Booking-advarsel">
+                <b>Booking-regler</b>
+                <div>Min 10 / maks 25. Velg 1t eller 2t. 30 min buffer etter bookingen.</div>
+              </div>
+
+              <form class="formGrid" action="#" method="post" aria-label="Booking prototype">
+                <label>
+                  Dato
+                  <input type="date" name="date" />
+                </label>
+                <label>
+                  Starttid
+                  <input type="time" name="time" />
+                </label>
+                <label>
+                  Varighet
+                  <select name="duration">
+                    <option value="60">1 time</option>
+                    <option value="120">2 timer</option>
+                  </select>
+                </label>
+                <label>
+                  Antall spillere
+                  <input type="number" name="players" min="10" max="25" value="10" />
+                </label>
+
+                <label style="grid-column: 1 / -1;">
+                  Gruppe (valgfritt)
+                  <select name="groupType">
+                    <option value="venner">Vennegjeng</option>
+                    <option value="bursdag">Bursdag</option>
+                    <option value="utdrikningslag">Utdrikningslag</option>
+                    <option value="bedrift">Bedrift</option>
+                    <option value="annet">Annet</option>
+                  </select>
+                </label>
+
+                <label style="grid-column: 1 / -1;">
+                  Kommentar (valgfritt)
+                  <textarea name="note" placeholder="F.eks. bursdag, ønsker 2t, ekstra baller, osv."></textarea>
+                </label>
+
+                <div class="notice" style="grid-column: 1 / -1;">
+                  <b>Pris</b>
+                  <div>590 kr per person (inkl. 200 baller). Ekstra 500 baller: 200 kr. Betaling på stedet.</div>
+                </div>
+
+                <div class="ctaRow" style="grid-column: 1 / -1; margin-top: 2px;">
+                  <a class="btn primary" href="#booking">Book n&aring;</a>
+                  <a class="btn" href="#forespoersel">Ukedag? Send forespørsel</a>
+                </div>
+
+                <div class="fine" style="grid-column: 1 / -1;">
+                  Dette er en designprototype. I WordPress blir denne erstattet av bookingkalender med SMS/e-post.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="sectionHead fadeUp">
+            <div>
+              <h2 class="title h2">Våre tjenester</h2>
+              <p>Bygget for grupper. Null stress. Tydelige rammer.</p>
+            </div>
+            <div class="pill" aria-label="Kort oppsummering">
+              <span>590</span><span>&bull;</span><span>200 baller</span><span>&bull;</span><span>10&ndash;25</span>
+            </div>
+          </div>
+
+          <div class="grid serviceGrid fadeUp delay1">
+            <div class="card serviceCard">
+              <div class="row">
+                <h3 class="title h3">Arrangementer</h3>
+                <span class="tag">Bursdag / utdrikningslag</span>
+              </div>
+              <p>Vi kjører et ryddig opplegg med sikkerhetsbrief og spillformat som funker for både nybegynnere og erfarne.</p>
+            </div>
+            <div class="card serviceCard">
+              <div class="row">
+                <h3 class="title h3">Baneutleie</h3>
+                <span class="tag">Helg 10&ndash;18</span>
+              </div>
+              <p>Book fri starttid på helg. Velg 1 eller 2 timer. 30 min buffer mellom grupper for flyt og sikkerhet.</p>
+            </div>
+            <div class="card serviceCard">
+              <div class="row">
+                <h3 class="title h3">Utstyr</h3>
+                <span class="tag">Masker + markører</span>
+              </div>
+              <p>Utstyr og briefing er inkludert i opplegget. Du slipper å tenke på detaljer, vi tar det på banen.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pakker">
+        <div class="wrap">
+          <div class="sectionHead fadeUp">
+            <div>
+              <h2 class="title h2">Pakker og priser</h2>
+              <p>Enkelt oppsett: samme pris per person. Velg varighet og ammo etter behov.</p>
+            </div>
+          </div>
+
+          <div class="grid prices fadeUp delay1">
+            <div class="card priceCard">
+              <div class="badge">
+                <span class="tag" style="border-color: rgba(183,255,106,0.40); background: rgba(183,255,106,0.10);">Mest valgt</span>
+                <span class="money">590 kr / pers</span>
+              </div>
+              <h3 class="title h3">Standard</h3>
+              <div class="muted">Inkluderer 200 baller. Betaling på stedet.</div>
+              <ul>
+                <li>Velg 1t eller 2t</li>
+                <li>Passer best for 10&ndash;25 spillere</li>
+                <li>Oppmøte 15 min før start</li>
+              </ul>
+              <div class="action">
+                <a class="btn primary" href="#booking">Book helg</a>
+                <a class="btn" href="#forespoersel">Ukedag (foresp&oslash;rsel)</a>
+              </div>
+            </div>
+
+            <div class="card priceCard">
+              <div class="badge">
+                <span class="tag" style="border-color: rgba(255,106,61,0.42); background: rgba(255,106,61,0.10);">Ammo</span>
+                <span class="money">+500: 200 kr</span>
+              </div>
+              <h3 class="title h3">Ekstra baller</h3>
+              <div class="muted">Anbefalt hvis dere vil spille aggressivt, eller er 20+ spillere.</div>
+              <ul>
+                <li>Legg til 0, 1 eller flere pakker</li>
+                <li>Kan avtales på forhånd eller på stedet</li>
+                <li>Enkelt å skalere opp underveis</li>
+              </ul>
+              <div class="action">
+                <a class="btn" href="#booking">Legg til ved booking</a>
+                <a class="btn" href="#praktisk">Se praktisk info</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="praktisk">
+        <div class="wrap">
+          <div class="sectionHead fadeUp">
+            <div>
+              <h2 class="title h2">Slik fungerer det</h2>
+              <p>Designet for at dere skal komme i gang raskt og trygt.</p>
+            </div>
+            <div class="pill"><span>Sikkerhet først</span><span>&bull;</span><span>Ryddig opplegg</span></div>
+          </div>
+
+          <div class="grid steps fadeUp delay1">
+            <div class="card step">
+              <div class="n"><span class="dot"></span><span>01</span></div>
+              <h3 class="title h3">Oppmøte</h3>
+              <p>Møt opp 15 min før start. Vi tar imot gruppa og setter rammene for økta.</p>
+            </div>
+            <div class="card step">
+              <div class="n"><span class="dot"></span><span>02</span></div>
+              <h3 class="title h3">Brief & utstyr</h3>
+              <p>Sikkerhetsbrief, masker på, og kort gjennomgang av spillformat. Nybegynnervennlig.</p>
+            </div>
+            <div class="card step">
+              <div class="n"><span class="dot"></span><span>03</span></div>
+              <h3 class="title h3">Spill</h3>
+              <p>1t eller 2t spill. 30 min buffer etter bookingen for flyt mellom grupper.</p>
+            </div>
+          </div>
+
+          <div class="grid" style="grid-template-columns: 1fr; gap: 14px; margin-top: 14px;">
+            <div class="notice warn">
+              <b>Viktig</b>
+              <div>Minimum 10 spillere per booking. Ukedager tas kun etter forespørsel.</div>
+            </div>
+            <div class="notice">
+              <b>Klær</b>
+              <div>Bruk klær som tåler litt skitt og gode sko. Ta gjerne med hansker.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="forespoersel">
+        <div class="wrap">
+          <div class="sectionHead fadeUp">
+            <div>
+              <h2 class="title h2">Ukedag? Send forespørsel</h2>
+              <p>Vi kjører primært helg, men tar ukedager etter forespørsel. Dere får svar på SMS og e-post.</p>
+            </div>
+          </div>
+
+          <div class="grid heroGrid fadeUp delay1" style="align-items: stretch;">
+            <div class="card pad">
+              <h3 class="title h3">Forespørselsskjema</h3>
+              <p class="muted" style="margin: 10px 0 14px;">
+                Skriv ønsket dato og klokkeslett, varighet og antall. Vi bekrefter om banen er tilgjengelig.
+              </p>
+              <div class="formGrid">
+                <label>Ønsket dato <input type="date" /></label>
+                <label>Ønsket tid <input type="time" /></label>
+                <label>Varighet <select><option>1 time</option><option>2 timer</option></select></label>
+                <label>Antall spillere <input type="number" min="10" max="25" value="10" /></label>
+                <label style="grid-column: 1 / -1;">Navn <input type="text" placeholder="Navn" /></label>
+                <label style="grid-column: 1 / -1;">Telefon <input type="tel" placeholder="Telefon" /></label>
+                <label style="grid-column: 1 / -1;">E-post <input type="email" placeholder="E-post" /></label>
+                <label style="grid-column: 1 / -1;">Kommentar <textarea placeholder="Kort beskrivelse..."></textarea></label>
+              </div>
+              <div class="ctaRow" style="margin-top: 12px;">
+                <a class="btn primary" href="#forespoersel">Send forespørsel</a>
+                <span class="fine">Svar på SMS + e-post.</span>
+              </div>
+            </div>
+
+            <div class="card pad">
+              <h3 class="title h3">Hva du får</h3>
+              <div class="muted" style="margin-top: 8px; line-height: 1.55;">
+                <ul style="margin: 10px 0 0; padding-left: 18px;">
+                  <li>Ryddig planlegging (ingen dobbeltbooking)</li>
+                  <li>Automatiske varsler til dere og kundene</li>
+                  <li>Tydelige regler (min/max, oppmøte, buffer)</li>
+                  <li>Lettere å selge ekstra ammo uten misforståelser</li>
+                </ul>
+              </div>
+              <div class="notice" style="margin-top: 14px;">
+                <b>Booking-advarsler</b>
+                <div>Systemet kan varsle ved store grupper, kort frist og når dere bør anbefale 2 timer.</div>
+              </div>
+              <div class="ctaRow" style="margin-top: 12px;">
+                <a class="btn" href="#pakker">Se priser</a>
+                <a class="btn" href="#faq">FAQ</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="wrap">
+          <div class="sectionHead fadeUp">
+            <div>
+              <h2 class="title h2">FAQ</h2>
+              <p>Korte svar. Lange detaljer kan ligge på “Praktisk info”-siden i WordPress.</p>
+            </div>
+          </div>
+
+          <div class="grid faq fadeUp delay1">
+            <details>
+              <summary>Hvor lang tid tar det?</summary>
+              <p>Velg 1 eller 2 timer spill. I tillegg har vi 30 min buffer etter hver booking. Møt opp 15 min før start.</p>
+            </details>
+            <details>
+              <summary>Hva koster det?</summary>
+              <p>590 kr per person inkl. 200 baller. Ekstra 500 baller koster 200 kr.</p>
+            </details>
+            <details>
+              <summary>Kan vi booke på ukedag?</summary>
+              <p>Ja, etter forespørsel. Bruk skjemaet, så svarer vi på SMS og e-post.</p>
+            </details>
+            <details>
+              <summary>Hva b&oslash;r vi ha p&aring; oss?</summary>
+              <p>Kl&aelig;r som t&aring;ler litt skitt og gode sko. Hansker anbefales. Masker brukes alltid i spillomr&aring;det.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="wrap">
+          <div class="footGrid">
+            <div>
+              <div style="font-weight: 900;">Larvik Paintball</div>
+              <div class="fine">Baneutleie og utstyr. Helg 10&ndash;18.</div>
+            </div>
+            <div>
+              <div style="font-weight: 900;">Kontakt</div>
+              <div class="fine">Telefon: 92465866</div>
+              <div class="fine">E-post: contact@larvikpaintball.no</div>
+            </div>
+            <div>
+              <div style="font-weight: 900;">Adresse</div>
+              <div class="fine">Legg inn korrekt adresse + kart (Google/Apple) i WordPress.</div>
+            </div>
+          </div>
+          <div class="fine" style="margin-top: 14px;">
+            Prototype. Neste steg i WordPress: Amelia booking + SMS/e-post + ukedagsforesp&oslash;rselsskjema.
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <div class="stickyBook" role="navigation" aria-label="Rask booking">
+      <div class="inner">
+        <div class="left">
+          <b>590 kr / pers</b>
+          <span>inkl. 200 baller &bull; helg 10&ndash;18</span>
+        </div>
+        <a class="btn primary" href="#booking">Book n&aring;</a>
+      </div>
+    </div>
+  </body>
+</html>

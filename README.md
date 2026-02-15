@@ -1,0 +1,1 @@
+﻿# Larvik Paintball – Preview\n\nThis repo hosts a quick preview of the proposed homepage redesign.\n\n- Open index.html\n- Copy suggestions in copy-no.md\n
